@@ -1,0 +1,5 @@
+package io.benbaxter.guestbook.web.config;
+
+public class SecurityConfig {
+
+}

@@ -1,0 +1,13 @@
+package io.benbaxter.guestbook.service;
+
+import java.util.List;
+
+import io.benbaxter.guestbook.model.Person;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface PersonRepository extends CrudRepository<Person, Long> {
+
+    List<Person> findByLastName(String lastName);
+    
+}

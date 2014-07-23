@@ -1,0 +1,5 @@
+package io.benbaxter.guestbook.service;
+
+public class PersonRepository {
+
+}

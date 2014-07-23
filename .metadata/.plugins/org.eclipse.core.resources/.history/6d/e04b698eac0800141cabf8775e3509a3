@@ -1,0 +1,93 @@
+
+var people = (function() {
+
+	$(document).ready(function() {
+		console.log("hello");
+	});
+
+	function updateTable(data) {
+		
+		$("#peopleInput").siblings().remove();
+		var rows = $();
+		$.each(data, function(index, person) {
+			var deleteButton = $("<button></button>")
+				.addClass("btn btn-xs btn-success")
+				.click(function(){deletePerson(person)})
+				.html("x");
+			
+			rows = rows.add(
+				$("<tr></tr>")
+					.append(
+							deleteButton.appendTo(
+							$("<td></td>")
+							)
+							)
+					.append($("<td></td>").html(person.firstName))
+					.append($("<td></td>").html(person.lastName)));
+		});
+		rows.insertAfter("#peopleInput");
+	}
+	
+	function loadPeople() {
+		$.getJSON("/people", function(data) {
+			updateTable(data);
+		});
+	}
+
+	function addPerson() {
+		var array = $("#newPersonForm").serializeArray();
+	    var data = {};
+
+	    $.map(array, function(n, i){
+	        data[n['name']] = n['value'];
+	    });
+
+		$.ajax({
+			  type: "put",
+			  url: "/people",
+			  dataType: "json",
+			  data: JSON.stringify(data),
+			  contentType: "application/json",
+			  success: function(data) {
+				  updateTable(data);
+				  $("#newPersonForm")[0].reset();
+				  hideAddNewPerson();
+			  }
+		});
+	}
+
+	function deletePerson(person) {
+		$.ajax({
+			  type: "delete",
+			  url: "/people",
+			  dataType: "json",
+			  data: JSON.stringify(person),
+			  contentType: "application/json",
+			  success: function(data) {
+				  updateTable(data);
+			  }
+		});
+	}
+
+	
+	function hideAddNewPerson() {
+		$("#peopleInput").hide();
+	} 
+	
+	return {
+		showAddNewPerson : function() {
+			$("#peopleInput").show();
+		},
+		hideAddNewPerson : function() {
+			$("#peopleInput").hide();
+		},
+		loadPeople : function() {
+			loadPeople();
+		},
+		addNewPerson : function() {
+			addPerson();
+		}
+	};
+})();
+
+people.loadPeople();

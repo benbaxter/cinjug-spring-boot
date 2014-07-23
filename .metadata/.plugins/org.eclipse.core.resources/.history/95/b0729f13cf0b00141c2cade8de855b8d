@@ -1,0 +1,5 @@
+package io.benbaxter.guestbook.web.controller.rest;
+
+public class ApiSpecController {
+
+}

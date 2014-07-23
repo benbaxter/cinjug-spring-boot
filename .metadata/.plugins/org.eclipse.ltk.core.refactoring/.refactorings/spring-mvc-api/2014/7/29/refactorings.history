@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;io.benbaxter.guestbook.web.apprunner.AppRunner&apos; to &apos;ApiAppRunner&apos;&#x0D;&#x0A;- Original project: &apos;spring-mvc-api&apos;&#x0D;&#x0A;- Original element: &apos;io.benbaxter.guestbook.web.apprunner.AppRunner&apos;&#x0D;&#x0A;- Renamed element: &apos;io.benbaxter.guestbook.web.apprunner.ApiAppRunner&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;AppRunner&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/test\/java&lt;io.benbaxter.guestbook.web.apprunner{AppRunner.java[AppRunner" matchStrategy="1" name="ApiAppRunner" qualified="false" references="true" similarDeclarations="false" stamp="1405801245508" textual="false" version="1.0"/>
+</session>

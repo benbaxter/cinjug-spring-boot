@@ -1,0 +1,19 @@
+package io.benbaxter.guestbook.repository;
+
+import java.util.List;
+
+import io.benbaxter.guestbook.model.Person;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+public interface PersonRepository extends CrudRepository<Person, Long> {
+
+    List<Person> findByLastNameContaining(String lastName);
+
+    @Query("select p from Person p where p.firstName like :name or p.lastName like :name")
+    List<Person> findByFullName(@Param("name") String name);
+    
+}

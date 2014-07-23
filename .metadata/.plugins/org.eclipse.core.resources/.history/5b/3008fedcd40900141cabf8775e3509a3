@@ -1,0 +1,28 @@
+package io.benbaxter.guestbook.model;
+
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+
+public class FirstNameJSONSerializer extends StdSerializer<String> {
+
+	public FirstNameJSONSerializer() {
+		super(String.class);
+	}
+
+	@Override
+	public void serialize(String input, JsonGenerator jgen,
+			SerializerProvider provider) throws IOException,
+			JsonGenerationException {
+		
+		String out = input.substring(1);
+		
+		verify(jgen.writeString()).expectParam("");
+		
+		jgen.writeString(out);
+	}
+
+}

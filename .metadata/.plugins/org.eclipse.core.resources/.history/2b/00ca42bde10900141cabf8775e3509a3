@@ -1,0 +1,40 @@
+package io.benbaxter.guestbook.service;
+
+import io.benbaxter.guestbook.model.Person;
+import io.benbaxter.guestbook.repository.PersonRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.common.collect.Lists;
+
+public class GuestBookRepositoryService implements GuestBookService {
+
+	@Autowired
+	PersonRepository repository;
+
+	public List<Person> getPeople() {
+		return new ArrayList(repository.findAll());
+	}
+
+	@Override
+	public List<Person> findCertainPeople(String name) {
+		return getPeople()
+				.stream()
+				.filter( p -> p.getFullName().contains(name) )
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public void addPerson(Person person) {
+		getPeople().add(person);
+	}
+
+	@Override
+	public void deletePerson(Person person) {
+		getPeople().remove(person);
+	}
+	
+}

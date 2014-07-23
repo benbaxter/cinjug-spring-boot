@@ -1,0 +1,9 @@
+package io.benbaxter.guestbook.service;
+
+import io.benbaxter.guestbook.model.Person;
+
+import org.springframework.data.repository.CrudRepository;
+
+public class PersonRepository implements CrudRepository<Person, Long> {
+
+}

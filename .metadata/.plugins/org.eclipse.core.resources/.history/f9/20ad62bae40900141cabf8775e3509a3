@@ -1,0 +1,27 @@
+package io.benbaxter.guestbook.repository;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import io.benbaxter.guestbook.model.Person;
+
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.data.repository.CrudRepository;
+
+public class PersonJpaRepository extends SimpleJpaRepository<Person, Long> {
+
+	@PersistenceContext
+	private EntityManager em;
+
+	public PersonJpaRepository() {
+		super(Person.class, em);
+	}
+
+	public List<Person> findByLastName(String lastName) {
+		return Collections.emptyList();
+	}
+
+}

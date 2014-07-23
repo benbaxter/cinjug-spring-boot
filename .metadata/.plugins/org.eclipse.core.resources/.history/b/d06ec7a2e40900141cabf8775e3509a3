@@ -1,0 +1,14 @@
+package io.benbaxter.guestbook.repository;
+
+import java.util.List;
+
+import io.benbaxter.guestbook.model.Person;
+
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.data.repository.CrudRepository;
+
+public class PersonJpaRepository extends SimpleJpaRepository<Person, Long> {
+
+    List<Person> findByLastName(String lastName);
+    
+}

@@ -1,0 +1,23 @@
+package io.benbaxter.guestbook.web.config;
+
+
+import io.benbaxter.guestbook.repository.PersonRepository;
+import io.benbaxter.guestbook.service.GuestBookRepositoryService;
+import io.benbaxter.guestbook.service.GuestBookService;
+import io.benbaxter.guestbook.service.InMemoryGuestBookService;
+
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
+
+@Configuration
+@ComponentScan("io.benbaxter.guestbook.repository")
+@EnableJpaRepositories(""io.benbaxter.guestbook.repository"")
+public class RepositoryConfig {
+
+}

@@ -1,0 +1,13 @@
+package io.benbaxter.guestbook.web.config;
+
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+@Configuration
+@ComponentScan({"io.benbaxter.guestbook.repository", "io.benbaxter.guestbook.model"})
+@EnableJpaRepositories({"io.benbaxter.guestbook.repository", "io.benbaxter.guestbook.model"})
+public class RepositoryConfig {
+
+}

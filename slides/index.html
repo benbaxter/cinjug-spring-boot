@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>CinJUG :: Spring Boot</title>
+
+		<meta name="description" content="A simple presentation on a simple technology, thank you spring guys!">
+		<meta name="author" content="Benjamin Baxter">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<section>
+						<h1>Spring Boot</h1>
+						<h3>Spring made easy</h3>
+						<h4>&quot;More Spring, Less Configuration&quot;</h4>
+						<p>
+							<small>Created by <a href="#">Benjamin Baxter</a></small>
+						</p>
+					</section>
+
+					<section>
+						<h2>History</h2>
+						<div>
+							<ol>
+								<li class="fragment">Spring 1.0: XML configuration (DTD)</li>
+								<li class="fragment">Spring 1.1: value and ref attributes</li>
+								<li class="fragment">Spring 2.0: XML namespaces</li>
+								<li class="fragment">Spring 2.5: <code class="java">@Component</code> / <code class="java">@Autowired</code></li>
+								<li class="fragment">Spring 3.0: Java configuration</li>
+								<li class="fragment">Spring 3.1: Profiles</li>
+								<li class="fragment">Spring 3.2: Nothing (Got bored?)</li>
+								<li class="fragment">Spring 4.0: Conditional beans</li>
+							</ol>
+						</div>
+					</section>
+					
+					<section>
+						<h2>Future</h2>
+						<p>
+							<ul>
+								<li>Spring &infin;: No Configuration</li>
+								<li>Like a mac, it just works.</li>
+								<li>They know what we are thinking before we do...</li>
+							</ul>
+						</p>
+					</section>
+				</section>
+				
+				<section>
+					<section>
+						<h2>How it works</h2>
+						<div>
+							<ul>
+								<li>It just does</li>
+								<li>Highly opinionated
+									<ul><li>But lets you speak up</li></ul>
+								</li>
+								<li>Autoconfiguration
+									<ul>
+										<li>Automagic</li>
+										<li>Creates the bean it thinks you need</li>
+										<li>Good and Bad... <br>A lot of spring just sitting around...</li>
+									</ul>
+								</li>
+								<li>Groovy people will love it
+									<ul>
+										<li>Auto imports for you</li>
+										<li>Powerful CLI tool</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</section>
+					
+					<section>
+						<h2>Production ready mentality</h2>
+						<div>
+							<ul>
+								<li>War and Jar</li>
+								<li>Great for getting POC's started</li>
+								<li>Easily packageable for <br>self contained embedded stuff
+									<ul>
+										<li>Containers (Tomcat/Jetty)</li>
+										<li>Databases (H2/HSQL/Derby)</li>
+										<li>Security</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</section>
+					
+					<section>
+						<h2>Key Features</h2>
+						<div>
+							<ul>
+								<li><code class="java">@EnableAutoConfiguration</code>
+									<ul><li style="font-size: .8em;">The Magic Sauce</li></ul>
+								</li>
+								<li>org.springframework.<strong>boot</strong>.autoconfigure.condition
+									<ul>
+										<li><code class="java">@ConditionalOnBean</code></li>
+										<li><code class="java">@ConditionalOnClass</code></li>
+										<li><code class="java">@ConditionalOnJava <span style="font-size: .6em;">(interesting idea)</span></code></li>
+										<li><code class="java">@ConditionalOnProperty</code></li>
+										<li><code class="java">@ConditionalOnMissingBean</code></li>
+										<li><code class="java">@ConditionalOnMissingClass</code></li>
+										<li style="font-size: .8em;">Sadly in spring-boot and not spring-context</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</section>
+					
+					<section>
+						<h2>Condition</h2>
+						<div>
+							<code class="java" style="font-size: .8em;">org.springframework.context.annotation.Condition</code>
+							<ul>
+								<li style="font-size: .8em;">Spring 4.0 Goodness</li>
+								<li style="font-size: .8em;">Spring 3.1 profiles is retro fitted with this magic</li>
+								<li style="font-size: .8em;">Implement Condition to make your own.</li>
+								<li><code class="java">@Contitional(MyCustomCondition.class)</code></li>
+							</ul>
+							<pre><code>
+public class MyCustomCondition implements Condition {
+    
+    public boolean matches(ConditionContext context, 
+      AnnotatedTypeMetadata metadata) {
+        return someWonderfulCondition(context, metadata);
+    }
+}							
+							</code></pre>
+						</div>
+					</section>
+					
+					<section>
+						<h2>Condition.matches(...)</h2>
+						<ul>
+							<li><code class="java">ConditionContext</code> <span style="font-size: .6em;">has access to...</span>
+								<ul>
+									<li><span style="font-size: .6em;">Bean Factory</span></li>
+									<li><span style="font-size: .6em;">ClassLoader</span></li>
+									<li><span style="font-size: .6em;">Environment</span></li>
+									<li><span style="font-size: .6em;">BeanDefinitionRegistry</span></li>
+									<li><span style="font-size: .6em;">ResourceLoader</span></li>
+								</ul>
+							</li>
+							<li><code class="java">AnnotatedTypeMetadata</code>
+								<br>
+								<ul>
+									<li><span style="font-size: .6em;">Annotated Attributes</span></li>
+									<li><code style="font-size: .7em;" class="java">getAllAnnotationAttributes(String annotationType)</code>
+									<li><span style="font-size: .5em;">Determine whether the underlying type has an annotation or meta-annotation of the given type defined.</span></li>
+									<li><code style="font-size: .7em;" class="java">isAnnotated(String annotationType)</code>
+								</ul>
+							</li>
+						</ul>
+					</section>
+					
+				</section>
+				
+				<section>
+					<h2>Gradle</h2>
+					<div>
+						<pre><code data-trim contenteditable style="max-height: 100%">
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:
+						spring-boot-gradle-plugin:1.1.3.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+
+jar {
+    baseName = 'spring-loading'
+    version =  '0.0.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.springframework.boot', 
+			name: 'spring-boot-starter-web', 
+			version: '1.1.3.RELEASE'
+}
+
+					</code></pre>
+					</div>
+
+				</section>
+
+				<section>
+					<section>
+						<h2>Maven</h2>
+						<div>
+							<pre><code data-trim contenteditable style="max-height: 100%" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<project>
+...
+<parent>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-parent</artifactId>
+	<version>1.1.3.RELEASE</version>
+</parent>
+...
+<dependencies>
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+</dependencies>
+...
+</project>						
+						</code></pre>
+						</div>
+						
+					</section>
+					
+					<section>
+						<h2>Maven</h2>
+						<h4>Web is nice, but what about databases?</h4>
+						<div>
+						<pre class="fragment"><code data-trim contenteditable style="max-height: 100%" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<project>
+...
+<dependencies>
+...
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-data-jpa</artifactId>
+		&lt;!-- jpa is an option, can be other spring-data-* --&gt;
+		&lt;!-- jdbc, rest, mongodb just to name a few --&gt;
+	</dependency>
+	&lt;!-- insert your database dudes here --&gt;
+	<dependency>
+		<groupId>com.h2database</groupId>
+		<artifactId>h2</artifactId>
+	</dependency>
+...
+</dependencies>
+...
+</project>						
+						</code></pre>
+						</div>
+					</section>
+					
+					<section>
+						<h2>Maven</h2>
+						<h4>Cool! But I don't want everyone to access everything...</h4>
+						<div>
+						<pre class="fragment"><code data-trim contenteditable style="max-height: 100%" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<project>
+...
+<dependencies>
+...
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-security</artifactId>
+	</dependency>
+...
+</dependencies>
+...
+</project>						
+						</code></pre>
+						</div>
+					</section>
+
+					<section>
+						<h2>Maven</h2>
+						<h4>Great but what about overnight processing?</h4>
+						<div>
+						<pre class="fragment"><code data-trim contenteditable style="max-height: 100%" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<project>
+...
+<dependencies>
+...
+	<dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-starter-batch</artifactId>
+	</dependency>
+...
+</dependencies>
+...
+</project>						
+						</code></pre>
+						</div>
+					</section>
+					
+                    <section>
+						<h2>Maven</h2>
+						<h4>I get the picture, they booted everything...</h4>
+						<div>
+							<ul>
+								<li class="fragment">MQ (activeMQ/hornetMQ)</li>
+								<li class="fragment">Web Service (ws)</li>
+								<li class="fragment">Integration</li>
+								<li class="fragment">Tomcat/Jetty</li>
+								<li class="fragment">Loaded</li>
+								<li class="fragment">Velocity</li>
+								<li class="fragment">Test</li>
+							</ul>
+							<p class="fragment">You like a spring project, <br>there is probably a boot-starter for you</p>
+						</div>
+					</section>
+					
+				</section>
+				
+				<section>
+					
+					<section>
+						<h2>Actuator</h2>
+						<h4>Amazing insite inside your application</h4>
+						<div>
+						<pre class="fragment"><code data-trim contenteditable style="max-height: 100%" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<project>
+...
+<dependencies>
+...
+	<dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-starter-actuator</artifactId>
+	</dependency>
+...
+</dependencies>
+...
+</project>						
+						</code></pre>
+						</div>
+					</section>
+					
+					<section>
+						<h2>Actuator</h2>
+						<h5>Time for some rest</h5>
+						<ul>
+							<li style="max-width: 40%; float: left;">Setup
+								<ul>
+									<li>/autoconfig
+										<ul><li style="font-size: .6em;">Shows the reason why config "was" or "was not" applied.</li></ul>
+									</li>
+									<li>/beans
+										<ul>
+											<li style="font-size: .6em;">List all beans.</li>
+											<li style="font-size: .6em;">Proof of a downside...</li>
+										</ul>
+									</li>
+									<li>/mapping
+										<ul><li style="font-size: .6em;">list of all <code class="java">@RequestMapping</code> paths.</li></ul>
+									</li>
+								</ul>
+							</li>
+							<li style="max-width: 40%; float: right;">Runtime
+								<ul>
+									<li>/health
+										<ul><li style="font-size: .6em;">Shows status, kind of stupid</li></ul>
+									</li>
+									<li>/env
+										<ul><li style="font-size: .6em;">Self explainatory...</li></ul>
+									</li>
+									<li>/dump
+										<ul><li style="font-size: .6em;">Performs a thread dump.</li></ul>
+									</li>
+									<li>/metrics
+										<ul><li style="font-size: .6em;">Like analytics</li></ul>
+									</li>
+									<li>/trace
+										<ul><li style="font-size: .6em;">Last few HTTP requests</li></ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<p><a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready">Source</a></p>
+					</section>
+					
+				</section>
+				
+				<section>
+					<h3>Code Snippet Time!</h3>
+					<div>
+						<pre><code style="max-height: 90%;" class="java">
+import org.springframework.boot.*;
+import org.springframework.boot.autoconfigure.*;
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@EnableAutoConfiguration
+public class SampleController {
+
+    @RequestMapping("/")
+    @ResponseBody
+    String home() {
+        return "Hello World!";
+    }
+
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(SampleController.class, args);
+    }
+}
+						</code></pre>
+						<span style="font-size: .6em;">
+						<code class="java">@EnableAutoConfiguration</code>, but what about <code class="java">@Configuration?</code>
+						<br>
+						<code class="java">@Controller</code>, yet no <code class="java">@EnableWebMvc?</code>
+						<a href="http://projects.spring.io/spring-boot/#quick-start">Spring Boot Home Page</a>
+						</span>
+					</div>
+				</section>
+				
+				<section>
+					<h3>How about that application I promised you?</h3>
+					
+					<p>Let's look at the UI first so we have some context.</p>
+					<p><a href="http://localhost:8080/people.html" target="_blank">localhost:8080/people.html</a></p>
+					
+				</section>
+				
+				<section>
+					<section>
+						<h2>Guest Book Guts</h2>
+						Let's define some of the guts that we can build around.
+						<br><br>
+						A simple spring-mvc app sounds like a good start.
+						<br><br>
+						What we will need: 
+						<br>
+						<ul>
+							<li>A controller</li>
+							<li>A model</li>
+							<li>And a service</li>
+						</ul>
+						<br>
+						<span style="font-size: .8em;">So cliche, I know...</span>
+					</section>
+					
+					<section>
+						<h3>Model and Service</h3>
+						<div>
+							<pre><code style="max-height: 90%;" class="java">
+public class Person {
+	String firstName;
+	String lastName;
+}
+
+public interface GuestBookService {
+	
+	List&lt;Person&gt; getPeople();
+	
+	List&lt;Person&gt; findCertainPeople(String name);
+	
+	void addPerson(Person person);
+	
+	void deletePerson(Person person);
+}
+
+							</code></pre>
+						</div>
+					</section>
+					
+					<section>
+						<h3>Controller</h3>
+						<div>
+							<pre><code style="max-height: 90%;" class="java">
+@RestController
+public class GuestBookController {
+
+	@Autowired
+	GuestBookService service;
+	
+	@RequestMapping("/people")
+	public List&lt;Person&gt; getPeople() {...}
+
+	@RequestMapping("/people/{name}")
+	public List&lt;Person&gt; findCertainPeople(
+		@PathVariable String name) {...}
+
+	@RequestMapping(value="/people", method=PUT)
+	public List&lt;Person&gt; addPerson(
+		@RequestBody Person person) {...}
+
+	@RequestMapping(value="/people", method=DELETE)
+	public List&lt;Person&gt; deletePerson(
+		@RequestBody Person person) {...}
+	
+}
+							</code></pre>
+						</div>
+					</section>
+				</section>
+				
+				
+				
+				<section>
+					<section>
+						<h3>Guestbook v1</h3>
+						<div>
+							<pre><code style="max-height: 90%;" class="java">
+public class InMemoryGuestBookService implements GuestBookService {
+    
+    List&lt;Person&gt; people;
+    
+    @Override
+    public List&lt;Person&gt; getPeople() {
+        if( people == null ) { people = Lists.newArrayList(); }
+        return people;
+    }
+    @Override
+    public List&lt;Person&gt; findCertainPeople(String name) {
+        return getPeople().stream()
+                .filter( p -> p.getFullName().contains(name) )
+                .collect(Collectors.toList());
+    }
+    @Override
+    public void addPerson(Person person) {
+        getPeople().add(person);
+    }
+    @Override
+    public void deletePerson(Person person) {
+        getPeople().remove(person);
+    }	
+}
+							</code></pre>
+						</div>
+					</section>
+					
+					<section>
+						<h3>Guestbook v1 Config</h3>
+						<div>
+							<pre><code style="max-height: 90%;" class="java">
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan
+@EnableWebMvc
+public class AppConfig {
+
+    @Bean
+    public GuestBookService guestBookService() {
+        return new InMemoryGuestBookService();
+    }		
+}
+
+...
+
+public class AppRunner {
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(AppConfig.class, args);
+    }
+}
+							</code></pre>
+						</div>
+					</section>
+					
+				</section>
+
+				
+				<section>
+					<section>
+						<h3>Guestbook v2</h3>
+						<div>
+						<pre class="fragment"><code data-trim contenteditable style="max-height: 100%" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<project>
+...
+<dependencies>
+...
+	&lt;!-- Provided (for embedded war support) --&gt;
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-tomcat</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.tomcat.embed</groupId>
+		<artifactId>tomcat-embed-jasper</artifactId>
+		<scope>provided</scope>
+	</dependency>
+...
+</dependencies>
+...
+</project>						
+						</code></pre>
+						</div>
+					</section>
+					
+					<section>
+						<h3>Guestbook v2 Config</h3>
+						<div>
+							<pre><code style="max-height: 90%;" class="java">
+@Configuration
+@EnableWebMvc
+@ComponentScan("io.benbaxter.guestbook.web.controller")
+public class MvcConfig extends WebMvcConfigurerAdapter {
+    
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry
+            .addResourceHandler("/static/**")
+            .addResourceLocations("/static/");
+    }
+}
+							</code></pre>
+						</div>
+						<div>Weird, where is a view resolver?</div>
+						<div class="fragment">
+							Magic!
+							<span class="fragment"><code class="java">@EnableWebMvc</code></span>
+							<div class="fragment">However...</div>
+						</div>
+						
+					</section>
+
+					<section>
+						<h3>Guestbook v2 Extenral Config</h3>
+						<h4>Introducing application.properties!</h4>
+						<div>
+							Where does spring think it should go?
+							<ul>
+								<li>A /config subdir of the current directory.</li>
+								<li>A classpath /config package</li>
+								<li>Current directory or classpath root</li>
+								<li>application-{profile}.properties</li>
+							</ul>
+							<div>
+							<br>
+							Some useful web properties
+							<ul>
+								<li>spring.view.prefix: /WEB-INF/jsp/</li>
+								<li>spring.view.suffix: .jsp</li>
+								<li>http.mappers.json-pretty-print=true</li>
+							</ul>
+							<br>
+							<a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html">External Config</a> /
+							<a href"http://docs.spring.io/spring-boot/docs/current/reference/html/howto-properties-and-configuration.html">How To</a>
+							</div>
+						</div>
+						
+					</section>
+
+					
+				</section>
+				
+				<section>
+					<section>
+						<h3>Guestbook v3</h3>
+						<div>
+							<p style="font-size: .8em;">Web is cool but how about upgrading that in memory serivce?</p>
+							<p style="font-size: .8em;">I used spring-data-jpa, but you can use spring-jdbc it you prefer.</p>
+							<pre><code style="max-height: 90%;">
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+							
+public interface PersonRepository extends CrudRepository&lt;Person, Long&gt;{
+	
+    List&lt;Person&gt; findByLastNameContaining(String lastName);
+
+    @Query("select p from Person p "
+        + " where p.firstName like concat ('%', :name, '%')"
+        + " or p.lastName like concat ('%', :name, '%') ")
+    List&lt;Person&gt; findByFullName(@Param("name") String name);
+    
+}
+							</code></pre>
+						</div>
+					</section>
+					
+					<section>
+						<h3>Guestbook v3 Config</h3>
+						<div>
+							<span style="font-size: .8em;">Have to tweek our Person class real quick...</span>
+							<pre><code class="java">
+@Entity
+public class Person {
+    @Id  @GeneratedValue( strategy = GenerationType.AUTO )
+    private long id;
+    ...
+}
+							</code></pre>
+							
+							<span style="font-size: .8em;">Just in case your repos or entities do not just magically appear...</span>
+							<pre><code class="java">
+@EnableJpaRepositories( 
+	basePackageClasses = { PersonRepository.class } )
+@EntityScan( basePackageClasses = Person.class )
+public class RepositoryConfig { /* No need for anything */ }
+							</code></pre>
+							<span style="font-size: .8em;">If your component scanning is setup correctly, you should not need this.</span>
+						</div>
+						<div style="font-size: .8em;">
+							<code class="java">@EnableAutoConfiguration</code>
+							<span>should be all you need.</span>
+						</div>				
+						
+					</section>
+					
+					<section>
+						<h4>Guestbook v3 Datasources</h4>
+						<div>
+							<div style="font-size: .8em;">Remember the conditions from before? Let's re-vamp our AppConfig</div>
+<pre><code style="max-height: 80%;">import org.h2.Driver;
+
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan
+@Import( RepositoryConfig.class )
+public class AppConfig {
+
+    @Autowired PersonRepository personRepository;
+	
+    @ConditionalOnMissingClass( name = "org.h2.Driver" )
+    @Bean( name = "guestBookService" )
+    public GuestBookService inMemoryGuestBookService() {
+        return new InMemoryGuestBookService();
+    }
+	
+    @ConditionalOnClass( value = Driver.class )
+    @Bean( name = "guestBookService" )
+    public GuestBookService h2GuestBookService() {
+        return new GuestBookRepositoryService(personRepository);
+    }
+}</code></pre>
+						</div>
+					</section>
+					
+						<section>
+						<h4>Guestbook v3 H2 Service</h4>
+						<div>
+							<div style="font-size: .8em;">What was GuestBookRepositoryService?</div>
+<pre><code style="max-height: 80%;">
+public class GuestBookRepositoryService implements GuestBookService {
+
+    PersonRepository repository;
+	
+    GuestBookRepositoryService(PersonRepository repository) {
+        this.repository = repository;
+    }
+	
+    List&lt;Person&gt; getPeople() { return repository.findAll(); }
+ 
+    @Override
+    List&lt;Person&gt; findCertainPeople(String name) {
+        return repository.findByFullName(name);
+    }
+
+    @Override @Transactional
+    void addPerson(Person person) { repository.save(person); }
+
+    @Override @Transactional
+    void deletePerson(Person person) { repository.delete(person); }
+}
+</code></pre>
+						</div>
+					</section>
+					
+					<section>
+						<h4>Guestbook v3 Datasources Sources</h4>
+						
+						<div style="font-size: .8em;">
+							So how did those names get in the demo?
+							<br>
+							<div class="fragment">
+								import.sql, data.sql, &amp; schema.sql <span style="font-size: .8em;">(in root of classpath)</span>
+							</div>
+							<div class="fragment">
+								application.properties 
+								<br>
+								<ul>
+									<li>spring.datasource.url</li>
+									<li>spring.datasource.username</li>
+									<li>spring.datasource.password</li>
+									<li>spring.datasource.driverClassName</li>
+								</ul>
+							</div>
+							<br>
+							<div class="fragment">
+								If you use an embedded database (H2, HSQL, or Derby)<br>then a default JPA database will be automatically created
+								<br><br>
+								spring.jpa.hibernate.ddl_auto: none, validate, update, create-drop
+
+							</div>
+							
+							<br>
+							<a href="http://docs.spring.io/spring-boot/docs/1.1.2.RELEASE/reference/html/boot-features-sql.html">Boot SQL Features</a>
+							/
+							<a href="http://docs.spring.io/spring-boot/docs/1.0.1.RELEASE/reference/html/howto-database-initialization.html">Initialization</a>
+							/
+							<a href="http://docs.spring.io/spring-data/jpa/docs/1.3.0.RELEASE/reference/html/jpa.repositories.html">Spring JPA Intro</a>
+						</div>
+					
+					</section>
+					
+				</section>
+
+				<section>
+					<section>
+						<h3>Guestbook v4</h3>
+						<div>
+							<div style="font-size: .8em;">Do we want everyone to be able to add or delete someone?</div>
+							<div class="fragment" style="font-size: .8em;">
+								<br><br>
+								The best I can say is look at these: 
+								<a href="https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples/spring-boot-sample-web-method-security">Method Level</a> /
+								<a href="https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples/spring-boot-sample-web-secure">Secure</a>
+								<br><br>Could not get it to work when I tried. 
+								<br>If I put more time into it, I probably could.
+								<br>Defeated :(
+								<br><br>
+								For the most part it was JavaConfig from 3.1 with a few hooks
+							</div>
+						</div>
+					</section>
+					<section>
+						<h3>Guestbook v4 Security</h3>
+						<h4>Authentication Manager</h4>
+						<div>
+							<div style="font-size: .7em;">
+								Out of the box, what happens?
+								<br><br>
+								Default AuthenticationManager will be created for you!
+								<br><br>
+								It contains a single user, 'user', and a random password. <br>It will be printed at INFO level on startup.
+								
+								<br><br>
+								Using default security password: 78fa095d-3f4c-48b1-ad50-e24c31d5cf35
+								
+								<br><br>
+								Kind of rough, can override it using 'security.user.password'<br>Nice use case for system to system apps?
+								
+								<br><br>
+								Can extend GlobalAuthenticationConfigurerAdapter to create your own AuthenticationManager.
+							</div>
+							
+						</div>
+					</section>
+					
+					<section>
+						<h3>Guestbook v4 Security</h3>
+						<h4>Global method security</h4>
+						<div>
+							<div style="font-size: .7em;">
+								Add <code class="java">@EnableGlobalMethodSecurity</code> to your <code class="java">@Configuration</code>
+								<br>
+								extend WebSecurityConfigurerAdapter and define your own
+							</div>
+							<pre><code style="max-height: 80%;">@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@Configuration protected static class ApplicationSecurity 
+        extends WebSecurityConfigurerAdapter {
+
+    @Override public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/static/**");
+    }
+		
+    @Override protected void configure(HttpSecurity http) {
+        http.csrf().disable().authorizeRequests()
+            .antMatchers("/login")   
+                .permitAll()
+            .antMatchers(HttpMethod.GET, "/people**")
+                .permitAll()
+            .anyRequest()            
+                .fullyAuthenticated()
+            .and().formLogin()  
+                .defaultSuccessUrl("/people.html")
+            .and().httpBasic();
+}</code></pre>
+							
+						</div>
+					</section>
+				</section>
+				
+				<section>
+					<h1>THE END</h1>
+					<h3>Thanks for coming!</h3>
+					
+					<div>
+						<h4>Sources</h4>
+						<a href="http://projects.spring.io/spring-boot/#quick-start">Spring Boot Home Page</a>
+						<br>
+						<a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready">Actuator</a>
+						<br>
+						<a href="http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html">External Config</a>
+						<br>
+						<a href"http://docs.spring.io/spring-boot/docs/current/reference/html/howto-properties-and-configuration.html">How To: Properties</a>
+						<br>
+						<a href="http://docs.spring.io/spring-boot/docs/1.1.2.RELEASE/reference/html/boot-features-sql.html">Boot SQL Features</a>
+						<br>
+						<a href="http://docs.spring.io/spring-boot/docs/1.0.1.RELEASE/reference/html/howto-database-initialization.html">DataBase Initialization</a>
+						<br>
+						<a href="http://docs.spring.io/spring-data/jpa/docs/1.3.0.RELEASE/reference/html/jpa.repositories.html">Spring JPA Intro</a>
+						<br>
+						<a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-security">Security</a>
+						<br>
+						<a href="https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples">Samples <span style="font-size: .8em;">(Once I saw this, I lost the will to give this talk)</span></a>
+					</div>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'page', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
